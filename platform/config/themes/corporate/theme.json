@@ -1,0 +1,109 @@
+{
+  "name": "corporate",
+  "display_name": "现代企业",
+  "description": "更贴近真实企业分工的产品、项目、研发、质量与运营协作架构",
+  "language": "zh-CN",
+  "owner_title": "负责人",
+  "task_prefix": "TASK",
+  "tone": "专业、直接、像真实同事协作一样推进",
+  "roles": {
+    "router": {
+      "agent_id": "assistant",
+      "title": "项目协调助理",
+      "identity_name": "项目协调助理",
+      "description": "消息分发、会话协同、任务建单与进展对齐",
+      "model_tier": "primary",
+      "mentionPatterns": ["assistant", "助理", "协调", "help"]
+    },
+    "planner": {
+      "agent_id": "vp_strategy",
+      "title": "产品策略负责人",
+      "identity_name": "产品策略负责人",
+      "description": "需求澄清、方案设计、优先级判断与项目推进",
+      "model_tier": "primary"
+    },
+    "reviewer": {
+      "agent_id": "vp_compliance",
+      "title": "质量与风控负责人",
+      "identity_name": "质量与风控负责人",
+      "description": "风险审查、质量把关、关键事项放行建议",
+      "model_tier": "light"
+    },
+    "dispatcher": {
+      "agent_id": "coo",
+      "title": "项目运营负责人",
+      "identity_name": "项目运营负责人",
+      "description": "执行协调、资源安排、跨团队推进",
+      "model_tier": "primary"
+    },
+    "departments": {
+      "engineering": {
+        "agent_id": "engineering",
+        "title": "研发负责人",
+        "identity_name": "研发负责人",
+        "description": "方案实现、架构设计、开发与联调",
+        "model_tier": "primary",
+        "sandbox": "non-main",
+        "elevated": true,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","Bash","WebFetch","sessions_spawn","sessions_send","sessions_yield"], "fs": {"workspaceOnly": false}}
+      },
+      "operations": {
+        "agent_id": "devops",
+        "title": "平台运维负责人",
+        "identity_name": "平台运维负责人",
+        "description": "环境稳定性、部署上线、平台运维与恢复",
+        "model_tier": "primary",
+        "sandbox": "non-main",
+        "elevated": true,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","Bash","WebFetch","sessions_spawn","sessions_send","sessions_yield"], "fs": {"workspaceOnly": false}}
+      },
+      "analytics": {
+        "agent_id": "data_team",
+        "title": "数据分析负责人",
+        "identity_name": "数据分析负责人",
+        "description": "指标分析、经营洞察、报表与数据支持",
+        "model_tier": "primary",
+        "sandbox": "off",
+        "elevated": false,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","Bash","WebFetch","sessions_spawn","sessions_send","sessions_yield"], "fs": {"workspaceOnly": true}}
+      },
+      "communications": {
+        "agent_id": "marketing",
+        "title": "市场运营负责人",
+        "identity_name": "市场运营负责人",
+        "description": "内容产出、对外沟通、品牌与运营动作",
+        "model_tier": "light",
+        "sandbox": "off",
+        "elevated": false,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","WebFetch","WebSearch","sessions_spawn","sessions_send","sessions_yield"], "deny": ["Bash"], "fs": {"workspaceOnly": true}}
+      },
+      "quality": {
+        "agent_id": "qa",
+        "title": "测试负责人",
+        "identity_name": "测试负责人",
+        "description": "测试验证、缺陷确认、质量评估与复验",
+        "model_tier": "primary",
+        "sandbox": "non-main",
+        "elevated": false,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","Bash","sessions_spawn","sessions_send","sessions_yield"], "fs": {"workspaceOnly": false}}
+      },
+      "hr": {
+        "agent_id": "hr",
+        "title": "人力支持负责人",
+        "identity_name": "人力支持负责人",
+        "description": "人员支持、培训材料、协作规范与组织事项",
+        "model_tier": "primary",
+        "sandbox": "all",
+        "elevated": false,
+        "tools": {"allow": ["Read","Write","Edit","Glob","Grep","sessions_spawn","sessions_send","sessions_yield"], "fs": {"workspaceOnly": true}}
+      }
+    },
+    "briefing": {
+      "agent_id": "briefing",
+      "title": "情报简报专员",
+      "identity_name": "情报简报专员",
+      "description": "情报整理、信息简报和日常重点同步",
+      "model_tier": "light"
+    }
+  }
+}

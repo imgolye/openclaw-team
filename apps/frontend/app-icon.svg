@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="224" fill="#fff" />
+  <rect x="3" y="3" width="1018" height="1018" rx="222" fill="none" stroke="#e5e7eb" stroke-width="4" />
+  <!-- 纯黑简洁 M -->
+  <path d="M270,700 L270,330 L512,550 L754,330 L754,700" fill="none" stroke="#111827" stroke-width="58" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- 顶部一个点 -->
+  <circle cx="512" cy="260" r="28" fill="#10b981" />
+</svg>

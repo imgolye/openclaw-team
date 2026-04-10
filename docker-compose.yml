@@ -1,0 +1,225 @@
+services:
+  sherpa-onnx-tts:
+    build:
+      context: .
+      dockerfile: platform/infra/docker/sherpa_onnx_tts.Dockerfile
+    image: openclaw-team-sherpa-onnx-tts:local
+    container_name: openclaw-team-sherpa-onnx-tts
+    restart: unless-stopped
+    environment:
+      SHERPA_ONNX_TTS_MODEL_REPO: ${SHERPA_ONNX_TTS_MODEL_REPO:-csukuangfj/kokoro-int8-multi-lang-v1_1}
+      SHERPA_ONNX_TTS_MODEL_DIR: ${SHERPA_ONNX_TTS_MODEL_DIR:-/data/openclaw/runtime/sherpa-onnx-tts/kokoro-int8-multi-lang-v1_1}
+      SHERPA_ONNX_TTS_MODEL_ID: ${SHERPA_ONNX_TTS_MODEL_ID:-kokoro-multi-lang-v1_1}
+      SHERPA_ONNX_TTS_PORT: ${SHERPA_ONNX_TTS_PORT:-8080}
+      SHERPA_ONNX_TTS_DEFAULT_SPEED: ${SHERPA_ONNX_TTS_DEFAULT_SPEED:-1.0}
+      SHERPA_ONNX_TTS_DEFAULT_SPEAKER: ${SHERPA_ONNX_TTS_DEFAULT_SPEAKER:-zf_001}
+      SHERPA_ONNX_TTS_NUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      SHERPA_ONNX_TTS_PROVIDER: ${SHERPA_ONNX_TTS_PROVIDER:-cpu}
+      SHERPA_ONNX_TTS_LANGUAGE: ${SHERPA_ONNX_TTS_LANGUAGE:-}
+      OMP_NUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      OPENBLAS_NUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      MKL_NUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      VECLIB_MAXIMUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      NUMEXPR_NUM_THREADS: ${SHERPA_ONNX_TTS_NUM_THREADS:-2}
+      HF_HOME: /data/openclaw/runtime/sherpa-onnx-tts/.cache
+    expose:
+      - "8080"
+    ports:
+      - "${MISSION_CONTROL_SPEECH_RUNTIME_PORT:-8090}:8080"
+    volumes:
+      - openclaw_team_state:/data/openclaw
+    cpus: ${SHERPA_ONNX_TTS_CPUS:-2.0}
+    mem_limit: ${SHERPA_ONNX_TTS_MEM_LIMIT:-4g}
+    mem_reservation: ${SHERPA_ONNX_TTS_MEM_RESERVATION:-1g}
+    shm_size: ${SHERPA_ONNX_TTS_SHM_SIZE:-1g}
+    healthcheck:
+      test: ["CMD-SHELL", "code=$$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/healthz || true); [ \"$$code\" = \"200\" ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 180s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: openclaw-team-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-openclaw_team}
+      POSTGRES_USER: ${POSTGRES_USER:-openclaw_team}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set.}"
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=128MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c work_mem=8MB
+      -c max_wal_size=2GB
+      -c random_page_cost=1.1
+      -c default_statistics_target=100
+      -c idle_in_transaction_session_timeout=30000
+      -c lock_timeout=10000
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-openclaw_team} -d ${POSTGRES_DB:-openclaw_team}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "${POSTGRES_CPUS:-2.0}"
+          memory: ${POSTGRES_MEM_LIMIT:-1G}
+        reservations:
+          cpus: "${POSTGRES_CPU_RESERVATION:-0.5}"
+          memory: ${POSTGRES_MEM_RESERVATION:-256M}
+    cpus: ${POSTGRES_CPUS:-2.0}
+    mem_limit: ${POSTGRES_MEM_LIMIT:-1g}
+    mem_reservation: ${POSTGRES_MEM_RESERVATION:-256m}
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    container_name: openclaw-team-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "${REDIS_CPUS:-1.0}"
+          memory: ${REDIS_MEM_LIMIT:-256M}
+        reservations:
+          cpus: "${REDIS_CPU_RESERVATION:-0.1}"
+          memory: ${REDIS_MEM_RESERVATION:-64M}
+    cpus: ${REDIS_CPUS:-1.0}
+    mem_limit: ${REDIS_MEM_LIMIT:-256m}
+    mem_reservation: ${REDIS_MEM_RESERVATION:-64m}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  openclaw-team:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openclaw-team:local
+    container_name: openclaw-team
+    restart: unless-stopped
+    environment:
+      MISSION_CONTROL_RUNTIME_PROFILE: ${MISSION_CONTROL_RUNTIME_PROFILE:-container}
+      OPENCLAW_DIR: /data/openclaw
+      OPENCLAW_STATE_DIR: /data/openclaw
+      OPENCLAW_CONFIG_PATH: /data/openclaw/openclaw.json
+      PORT: ${MISSION_CONTROL_PORT:-18890}
+      BOOTSTRAP_THEME: ${BOOTSTRAP_THEME:-corporate}
+      AUTO_START_GATEWAY: ${AUTO_START_GATEWAY:-1}
+      MISSION_CONTROL_ENABLE_BROWSER_AUTOSTART: ${MISSION_CONTROL_ENABLE_BROWSER_AUTOSTART:-1}
+      MISSION_CONTROL_ENABLE_MEMORY_PREWARM: ${MISSION_CONTROL_ENABLE_MEMORY_PREWARM:-0}
+      AUTOMATION_INTERVAL: ${AUTOMATION_INTERVAL:-60}
+      MISSION_CONTROL_DEPLOYMENT_MODE: ${MISSION_CONTROL_DEPLOYMENT_MODE:-single_tenant}
+      MISSION_CONTROL_DEPLOYMENT_PROFILE: ${MISSION_CONTROL_DEPLOYMENT_PROFILE:-standard}
+      MISSION_CONTROL_ENV: ${MISSION_CONTROL_ENV:-}
+      # NOTE: POSTGRES_PASSWORD is validated above (no default allowed).
+      # The DATABASE_URL below must use the same POSTGRES_PASSWORD value.
+      MISSION_CONTROL_DATABASE_URL: "postgresql://${POSTGRES_USER:-openclaw_team}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set.}@postgres:5432/${POSTGRES_DB:-openclaw_team}"
+      MISSION_CONTROL_REDIS_URL: ${MISSION_CONTROL_REDIS_URL:-redis://redis:6379/0}
+      GATEWAY_AUTH_TOKEN: ${GATEWAY_AUTH_TOKEN:-}
+      DASHBOARD_AUTH_TOKEN: ${DASHBOARD_AUTH_TOKEN:-}
+      MISSION_CONTROL_TASK_CREATE_MODEL_TIMEOUT: ${MISSION_CONTROL_TASK_CREATE_MODEL_TIMEOUT:-8}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      BIGMODEL_API_KEY: ${BIGMODEL_API_KEY:-}
+      ZHIPUAI_API_KEY: ${ZHIPUAI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:-}
+      MINIMAX_CN_API_KEY: ${MINIMAX_CN_API_KEY:-}
+      SHERPA_ONNX_TTS_API_KEY: ${SHERPA_ONNX_TTS_API_KEY:-}
+      QWEN3_TTS_API_KEY: ${QWEN3_TTS_API_KEY:-}
+      MISSION_CONTROL_SPEECH_RUNTIME_BASE_URL: ${MISSION_CONTROL_SPEECH_RUNTIME_BASE_URL:-http://sherpa-onnx-tts:8080/v1}
+      MISSION_CONTROL_LOCAL_RUNTIME_BASE_URL: ${MISSION_CONTROL_LOCAL_RUNTIME_BASE_URL:-http://host.docker.internal:8080/v1}
+      MISSION_CONTROL_GEMMA4_MODEL_PATH: ${MISSION_CONTROL_GEMMA4_MODEL_PATH:-}
+      MISSION_CONTROL_GEMMA4_E2B_MODEL_PATH: ${MISSION_CONTROL_GEMMA4_E2B_MODEL_PATH:-gemma-4-e2b-it-q4_k_m.gguf}
+      MISSION_CONTROL_GEMMA4_E4B_MODEL_PATH: ${MISSION_CONTROL_GEMMA4_E4B_MODEL_PATH:-gemma-4-e4b-it-q4_k_m.gguf}
+      OPENCLAW_AUTH_SOURCE_FILE: ${OPENCLAW_AUTH_SOURCE_FILE:-}
+      OPENCLAW_AUTH_PROFILES_JSON: ${OPENCLAW_AUTH_PROFILES_JSON:-}
+      OPENCLAW_AUTH_PROFILES_B64: ${OPENCLAW_AUTH_PROFILES_B64:-}
+    depends_on:
+      sherpa-onnx-tts:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${MISSION_CONTROL_PORT:-18890}:18890"
+    volumes:
+      - openclaw_team_state:/data/openclaw
+      - ${HOME}/.openclaw:/bootstrap/openclaw-home:ro
+      - ${MISSION_CONTROL_LOCAL_MODELS_DIR:-./local/models}:/models
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    cpus: ${MISSION_CONTROL_CPUS:-6.0}
+    mem_limit: ${MISSION_CONTROL_MEM_LIMIT:-6g}
+    mem_reservation: ${MISSION_CONTROL_MEM_RESERVATION:-1g}
+    shm_size: ${MISSION_CONTROL_SHM_SIZE:-1g}
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:18890/api/auth/session', timeout=5)\" 2>/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: "${MISSION_CONTROL_CPUS:-6.0}"
+          memory: ${MISSION_CONTROL_MEM_LIMIT:-6G}
+        reservations:
+          cpus: "${MISSION_CONTROL_CPU_RESERVATION:-1.0}"
+          memory: ${MISSION_CONTROL_MEM_RESERVATION:-1G}
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+volumes:
+  openclaw_team_state:
+  postgres_data:

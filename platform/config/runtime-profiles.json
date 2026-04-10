@@ -1,0 +1,56 @@
+{
+  "profiles": {
+    "host": {
+      "label": "Host Product",
+      "product": {
+        "host": "127.0.0.1",
+        "bind": "127.0.0.1",
+        "port": 18890,
+        "baseUrl": "http://127.0.0.1:18890",
+        "frontendDist": "apps/frontend/dist"
+      },
+      "openclaw": {
+        "stateDir": ".mission-control/host-product",
+        "pairingSourceDir": "~/.openclaw"
+      },
+      "speechRuntime": {
+        "provider": "sherpa_onnx",
+        "baseUrl": "http://127.0.0.1:8090/v1",
+        "healthUrl": "http://127.0.0.1:8090/healthz",
+        "port": 8090
+      },
+      "localRuntime": {
+        "baseUrl": "http://127.0.0.1:11434/v1"
+      }
+    },
+    "container": {
+      "label": "Container Product",
+      "product": {
+        "host": "127.0.0.1",
+        "bind": "0.0.0.0",
+        "port": 18890,
+        "containerPort": 18890,
+        "baseUrl": "http://127.0.0.1:18890"
+      },
+      "openclaw": {
+        "stateDir": "/data/openclaw",
+        "pairingSourceDir": "/bootstrap/openclaw-home"
+      },
+      "speechRuntime": {
+        "provider": "sherpa_onnx",
+        "baseUrl": "http://sherpa-onnx-tts:8080/v1",
+        "hostBaseUrl": "http://127.0.0.1:8090/v1",
+        "dockerHostBaseUrl": "http://host.docker.internal:8090/v1",
+        "healthUrl": "http://127.0.0.1:8090/healthz",
+        "port": 8090
+      },
+      "localRuntime": {
+        "baseUrl": "http://host.docker.internal:11434/v1"
+      },
+      "deployment": {
+        "mode": "single_tenant",
+        "profile": "standard"
+      }
+    }
+  }
+}

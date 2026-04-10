@@ -1,0 +1,13 @@
+services:
+  sherpa-onnx-tts:
+    build:
+      context: .
+      dockerfile: platform/infra/docker/sherpa_onnx_tts.Dockerfile
+    gpus: ${SHERPA_ONNX_TTS_GPU_REQUEST:-all}
+    environment:
+      SHERPA_ONNX_TTS_PROVIDER: ${SHERPA_ONNX_TTS_PROVIDER:-cuda}
+      CUDA_VISIBLE_DEVICES: ${SHERPA_ONNX_TTS_CUDA_VISIBLE_DEVICES:-0}
+    shm_size: ${SHERPA_ONNX_TTS_SHM_SIZE:-8g}
+    mem_limit: ${SHERPA_ONNX_TTS_MEM_LIMIT:-12g}
+    mem_reservation: ${SHERPA_ONNX_TTS_MEM_RESERVATION:-4g}
+    cpus: ${SHERPA_ONNX_TTS_CPUS:-8.0}

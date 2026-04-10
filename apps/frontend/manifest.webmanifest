@@ -1,0 +1,17 @@
+{
+  "name": "OpenClaw Team",
+  "short_name": "OpenClaw Team",
+  "description": "OpenClaw Mission Control — AI Agent operations and orchestration platform for teams.",
+  "start_url": "/overview",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#1ead6f",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
