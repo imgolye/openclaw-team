@@ -1,0 +1,12 @@
+{
+  "kind": "task",
+  "bundleId": "TASK-20260407-001",
+  "title": "宿主机冒烟临时任务 1775577167",
+  "goal": "宿主机冒烟临时任务 1775577167",
+  "updatedAt": "2026-04-10T02:38:28.405620Z",
+  "meta": {
+    "taskId": "TASK-20260407-001",
+    "targetAgentId": "",
+    "workflowBinding": {}
+  }
+}

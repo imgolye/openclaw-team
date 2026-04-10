@@ -1,0 +1,12 @@
+{
+  "kind": "task",
+  "bundleId": "TASK-20260410-002",
+  "title": "获取本周GitHub AI项目趋势排行",
+  "goal": "获取本周GitHub AI项目趋势排行",
+  "updatedAt": "2026-04-10T02:38:28.400074Z",
+  "meta": {
+    "taskId": "TASK-20260410-002",
+    "targetAgentId": "",
+    "workflowBinding": {}
+  }
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Team — Open-source Agent Operations Platform</title>
+  <meta name="description" content="Self-hosted platform to manage AI agent teams. Task dispatch, workflow orchestration, runtime monitoring, 3D office view. Docker deploy in 5 minutes.">
+  <meta name="keywords" content="AI agents, agent orchestration, multi-agent, workflow, open source, self-hosted, LLM, DevOps">
+  <meta property="og:title" content="OpenClaw Team — Manage your AI Agent team">
+  <meta property="og:description" content="Open-source Agent operations platform. Task dispatch, workflow orchestration, runtime monitoring.">
+  <meta property="og:image" content="https://imgolye.github.io/openclaw-team/assets/overview.png">
+  <meta property="og:url" content="https://imgolye.github.io/openclaw-team">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OpenClaw Team">
+  <meta name="twitter:description" content="Open-source platform to manage your AI agent team.">
+  <meta name="twitter:image" content="https://imgolye.github.io/openclaw-team/assets/overview.png">
+  <link rel="canonical" href="https://imgolye.github.io/openclaw-team">
+  <link rel="sitemap" type="application/xml" href="/openclaw-team/sitemap.xml">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenClaw Team",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS, Windows (Docker)",
+    "description": "Open-source Agent operations and orchestration platform. Task dispatch, workflow orchestration, runtime monitoring, outcome delivery.",
+    "url": "https://imgolye.github.io/openclaw-team",
+    "downloadUrl": "https://github.com/imgolye/openclaw-team",
+    "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Leo Gao" },
+    "screenshot": "https://imgolye.github.io/openclaw-team/assets/overview.png",
+    "featureList": "Task Dispatch, Workflow Orchestration, Runtime Monitoring, 3D Office, Floating Chat, Skill Management, Multi-tenant, Self-hosted"
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --accent:#1ead6f;--accent-d:#158a57;--accent-l:rgba(30,173,111,0.08);
+      --bg:#fafafa;--bg2:#fff;--ink:#222;--muted:#666;--light:#999;
+      --card:#fff;--line:rgba(0,0,0,0.08);--shadow:rgba(0,0,0,0.08);
+      --font:"Inter",-apple-system,"Segoe UI",sans-serif;
+      --mono:"SF Mono","Fira Code",monospace;
+    }
+    [data-theme="dark"]{
+      --bg:#0f1012;--bg2:#161719;--ink:#e8e8e8;--muted:#999;--light:#666;
+      --card:#1a1b1f;--line:rgba(255,255,255,0.08);--shadow:rgba(0,0,0,0.3);
+      --accent-l:rgba(30,173,111,0.12);
+    }
+    body{font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+    a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+    /* Animations */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .anim{opacity:0;animation:fadeUp .6s ease forwards}
+    .anim-d1{animation-delay:.1s}.anim-d2{animation-delay:.2s}.anim-d3{animation-delay:.3s}.anim-d4{animation-delay:.4s}
+
+    /* Nav */
+    .nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:0 24px}
+    [data-theme="dark"] .nav{background:rgba(15,16,18,0.85)}
+    .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+    .nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1rem;color:var(--ink)}
+    .nav-logo{width:28px;height:28px;border-radius:7px;background:linear-gradient(145deg,#4dd695,#158a57);display:grid;place-items:center;color:#fff;font-size:.6rem;font-weight:800}
+    .nav-links{display:flex;gap:8px;align-items:center}
+    .nav-link{padding:6px 14px;border-radius:8px;font-size:.84rem;font-weight:500;color:var(--muted);border:1px solid var(--line);background:var(--card);transition:all .15s;cursor:pointer}
+    .nav-link:hover{color:var(--ink);border-color:var(--accent);text-decoration:none}
+    .nav-link--primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .nav-link--primary:hover{background:var(--accent-d);color:#fff}
+    .theme-toggle{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:all .15s}
+    .theme-toggle:hover{border-color:var(--accent)}
+    .lang-toggle{font-size:.78rem;padding:4px 10px}
+
+    /* Hero */
+    .hero{max-width:1100px;margin:0 auto;padding:80px 24px 60px;text-align:center}
+    .hero-badge{display:inline-block;padding:4px 14px;border-radius:20px;background:var(--accent-l);border:1px solid rgba(30,173,111,0.15);color:var(--accent-d);font-size:.78rem;font-weight:600;margin-bottom:20px}
+    [data-theme="dark"] .hero-badge{color:#4dd695}
+    .hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
+    .hero p{font-size:1.1rem;color:var(--muted);max-width:600px;margin:0 auto 32px}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{padding:10px 24px;border-radius:10px;font-size:.9rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .15s;border:none;cursor:pointer}
+    .btn--primary{background:var(--accent);color:#fff}.btn--primary:hover{background:var(--accent-d);text-decoration:none}
+    .btn--ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}.btn--ghost:hover{border-color:var(--accent);text-decoration:none}
+
+    /* Hero screenshot */
+    .hero-screenshot{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+    .hero-screenshot img{width:100%;border-radius:16px;border:1px solid var(--line);box-shadow:0 20px 60px var(--shadow);transition:transform .3s}
+    .hero-screenshot img:hover{transform:translateY(-4px)}
+
+    /* Stats */
+    .stats{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .stat{text-align:center;padding:24px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+    .stat-num{font-size:2rem;font-weight:800;color:var(--accent);line-height:1.2}
+    .stat-label{font-size:.82rem;color:var(--muted);margin-top:4px}
+
+    /* Section */
+    .section{max-width:1100px;margin:0 auto;padding:60px 24px}
+    .section-title{font-size:1.8rem;font-weight:700;text-align:center;margin-bottom:12px}
+    .section-desc{text-align:center;color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto 48px}
+
+    /* Features */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .feature{padding:24px;border-radius:14px;background:var(--card);border:1px solid var(--line);transition:border-color .2s,box-shadow .2s,transform .2s}
+    .feature:hover{border-color:rgba(30,173,111,0.25);box-shadow:0 8px 24px rgba(0,0,0,0.06);transform:translateY(-2px)}
+    .feature-icon{font-size:1.5rem;margin-bottom:10px}
+    .feature h3{font-size:.95rem;font-weight:700;margin-bottom:4px}
+    .feature p{font-size:.84rem;color:var(--muted);line-height:1.5}
+
+    /* Screenshots */
+    .screenshots{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+    .screenshot-card{border-radius:12px;overflow:hidden;border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
+    .screenshot-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px var(--shadow)}
+    .screenshot-card img{width:100%;display:block}
+    .screenshot-label{padding:10px 14px;background:var(--card);font-size:.82rem;font-weight:600;color:var(--muted);border-top:1px solid var(--line)}
+
+    /* Tech stack */
+    .tech-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .tech-tag{padding:6px 16px;border-radius:8px;background:var(--card);border:1px solid var(--line);font-size:.82rem;font-weight:600;color:var(--muted);transition:all .15s}
+    .tech-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Quick start */
+    .quickstart{background:#1a1a1a;color:#e0e0e0;border-radius:16px;padding:36px 32px;margin-top:48px}
+    .quickstart h3{color:#fff;font-size:1.1rem;margin-bottom:16px}
+    .quickstart pre{background:#111;padding:20px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.7;color:#a0d8b8}
+
+    /* CTA */
+    .cta{text-align:center;padding:80px 24px;background:linear-gradient(180deg,var(--bg),var(--bg2))}
+    .cta h2{font-size:1.8rem;font-weight:700;margin-bottom:12px}
+    .cta p{color:var(--muted);margin-bottom:24px;font-size:1rem}
+
+    /* Footer */
+    .footer{max-width:1100px;margin:0 auto;padding:32px 24px;text-align:center;color:var(--light);font-size:.82rem;border-top:1px solid var(--line)}
+    .footer a{color:var(--muted)}
+
+    @media(max-width:768px){
+      .hero{padding:48px 16px 40px}.hero h1{font-size:1.8rem}
+      .features,.screenshots{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .quickstart{padding:24px 20px}
+      .nav-links .lang-toggle{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><span class="nav-logo">OC</span>OpenClaw Team</div>
+    <div class="nav-links">
+      <button class="nav-link lang-toggle" onclick="toggleLang()" id="langBtn">中文</button>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle dark mode">&#127769;</button>
+      <a href="https://github.com/imgolye/openclaw-team" class="nav-link">GitHub</a>
+      <a href="https://github.com/imgolye/openclaw-team#quick-start" class="nav-link nav-link--primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="hero-badge anim">Open Source &middot; AGPL-3.0</span>
+  <h1 class="anim anim-d1" id="heroTitle">Manage your AI Agent team<br>from one platform</h1>
+  <p class="anim anim-d2" id="heroDesc">Task dispatch, workflow orchestration, runtime monitoring, and outcome delivery — unified Agent operations for teams.</p>
+  <div class="hero-actions anim anim-d3">
+    <a href="https://github.com/imgolye/openclaw-team#quick-start" class="btn btn--primary" id="ctaStart">Get Started</a>
+    <a href="https://github.com/imgolye/openclaw-team" class="btn btn--ghost">GitHub</a>
+  </div>
+</section>
+
+<div class="hero-screenshot anim anim-d4">
+  <img src="assets/overview.png" alt="OpenClaw Team Overview">
+</div>
+
+<div class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label" data-en="LLM Models" data-zh="支持模型">LLM Models</div></div>
+    <div class="stat"><div class="stat-num">37</div><div class="stat-label" data-en="API Endpoints" data-zh="API 端点">API Endpoints</div></div>
+    <div class="stat"><div class="stat-num">11</div><div class="stat-label" data-en="Default Agents" data-zh="默认 Agent">Default Agents</div></div>
+    <div class="stat"><div class="stat-num">5min</div><div class="stat-label" data-en="Docker Deploy" data-zh="Docker 部署">Docker Deploy</div></div>
+  </div>
+</div>
+
+<section class="section">
+  <h2 class="section-title" id="featTitle">Core Features</h2>
+  <p class="section-desc" id="featDesc">Everything you need to run an AI agent team in production.</p>
+  <div class="features">
+    <div class="feature"><div class="feature-icon">&#9889;</div><h3 data-en="Task Dispatch" data-zh="任务调度">Task Dispatch</h3><p data-en="Tasks auto-match the best agent. Priority sorting and load balancing built in." data-zh="任务自动匹配最佳 Agent，内置优先级排序与负载均衡。">Tasks auto-match the best agent. Priority sorting and load balancing built in.</p></div>
+    <div class="feature"><div class="feature-icon">&#128260;</div><h3 data-en="Workflow Orchestration" data-zh="工作流编排">Workflow Orchestration</h3><p data-en="Visual multi-agent workflow editor. Approval nodes, conditional branches, execution replay." data-zh="可视化多 Agent 工作流编辑器，支持审批节点、条件分支与执行回放。">Visual multi-agent workflow editor. Approval nodes, conditional branches, execution replay.</p></div>
+    <div class="feature"><div class="feature-icon">&#128202;</div><h3 data-en="Runtime Monitoring" data-zh="运行监控">Runtime Monitoring</h3><p data-en="Agent health, load, and alerts on one dashboard. Anomalies detected immediately." data-zh="Agent 健康度、负载与告警统一仪表盘，异常即时发现。">Agent health, load, and alerts on one dashboard. Anomalies detected immediately.</p></div>
+    <div class="feature"><div class="feature-icon">&#128172;</div><h3 data-en="Floating Chat" data-zh="即时沟通">Floating Chat</h3><p data-en="Instant messaging with any agent. Threads, mentions, and file sharing." data-zh="与任何 Agent 即时沟通，支持线程、@提及与文件共享。">Instant messaging with any agent. Threads, mentions, and file sharing.</p></div>
+    <div class="feature"><div class="feature-icon">&#127970;</div><h3 data-en="3D Office" data-zh="3D 办公室">3D Office</h3><p data-en="See your agent team in a virtual 3D office. Team vitals at a glance." data-zh="3D 虚拟办公室查看整个 Agent 团队工作状态。">See your agent team in a virtual 3D office. Team vitals at a glance.</p></div>
+    <div class="feature"><div class="feature-icon">&#128295;</div><h3 data-en="Skill Management" data-zh="技能管理">Skill Management</h3><p data-en="Hot-load skills, version control, 50+ model support." data-zh="技能热加载，版本管理，支持 50+ 模型。">Hot-load skills, version control, 50+ model support.</p></div>
+    <div class="feature"><div class="feature-icon">&#128101;</div><h3 data-en="Multi-tenant" data-zh="多租户">Multi-tenant</h3><p data-en="Role-based access, tenant API keys, audit logs." data-zh="角色权限管控，租户 API Key，完整审计日志。">Role-based access, tenant API keys, audit logs.</p></div>
+    <div class="feature"><div class="feature-icon">&#128274;</div><h3 data-en="Self-hosted" data-zh="本地部署">Self-hosted</h3><p data-en="Your data stays on your servers. Docker one-click deploy." data-zh="数据完全自主可控，Docker 一键部署。">Your data stays on your servers. Docker one-click deploy.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title" id="screenTitle">Product Screens</h2>
+  <p class="section-desc" id="screenDesc">A look inside the platform.</p>
+  <div class="screenshots">
+    <div class="screenshot-card"><img src="assets/agents.png" alt="Agents" loading="lazy"><div class="screenshot-label" data-en="Agent Management" data-zh="Agent 管理">Agent Management</div></div>
+    <div class="screenshot-card"><img src="assets/tasks.png" alt="Tasks" loading="lazy"><div class="screenshot-label" data-en="Task Board" data-zh="任务看板">Task Board</div></div>
+    <div class="screenshot-card"><img src="assets/conversations.png" alt="Conversations" loading="lazy"><div class="screenshot-label" data-en="Conversations" data-zh="对话管理">Conversations</div></div>
+    <div class="screenshot-card"><img src="assets/floating-chat.png" alt="Floating Chat" loading="lazy"><div class="screenshot-label" data-en="Floating Chat" data-zh="即时沟通">Floating Chat</div></div>
+    <div class="screenshot-card"><img src="assets/battlefield.png" alt="3D Office" loading="lazy"><div class="screenshot-label" data-en="3D Office" data-zh="3D 办公室">3D Office</div></div>
+    <div class="screenshot-card"><img src="assets/login.png" alt="Login" loading="lazy"><div class="screenshot-label" data-en="Login" data-zh="登录">Login</div></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title" id="techTitle">Tech Stack</h2>
+  <div class="tech-grid">
+    <span class="tech-tag">Python</span><span class="tech-tag">React</span><span class="tech-tag">PostgreSQL</span>
+    <span class="tech-tag">Docker</span><span class="tech-tag">OpenClaw</span><span class="tech-tag">Ant Design</span>
+    <span class="tech-tag">Three.js</span><span class="tech-tag">Vite</span><span class="tech-tag">REST API</span>
+    <span class="tech-tag">SSE</span><span class="tech-tag">PBKDF2</span><span class="tech-tag">AGPL-3.0</span>
+  </div>
+
+  <div class="quickstart">
+    <h3>Quick Start</h3>
+    <pre>git clone https://github.com/imgolye/openclaw-team.git
+cd openclaw-team
+cp .env.example .env
+docker compose up -d
+
+# Open http://localhost:18890</pre>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 id="ctaTitle">Start managing your Agent team today.</h2>
+  <p id="ctaDesc">Open source, self-hosted, production ready.</p>
+  <a href="https://github.com/imgolye/openclaw-team" class="btn btn--primary">View on GitHub</a>
+</section>
+
+<footer class="footer">
+  <p>OpenClaw Team &middot; AGPL-3.0 &middot; <a href="https://github.com/imgolye/openclaw-team">GitHub</a> &middot; <a href="https://github.com/imgolye/openclaw-team/blob/main/PRODUCT.md">Product</a></p>
+  <p style="margin-top:6px">&copy; 2025-2026 OpenClaw Team Contributors</p>
+</footer>
+
+<script>
+let lang = 'en';
+const i18n = {
+  heroTitle: { en: 'Manage your AI Agent team<br>from one platform', zh: '统一管理你的 AI Agent 团队' },
+  heroDesc: { en: 'Task dispatch, workflow orchestration, runtime monitoring, and outcome delivery — unified Agent operations for teams.', zh: '任务调度、工作流编排、运行监控、成果交付——一个平台完成 Agent 团队的全生命周期管理。' },
+  ctaStart: { en: 'Get Started', zh: '立即开始' },
+  featTitle: { en: 'Core Features', zh: '核心功能' },
+  featDesc: { en: 'Everything you need to run an AI agent team in production.', zh: '在生产环境中运营 Agent 团队所需的一切。' },
+  screenTitle: { en: 'Product Screens', zh: '产品截图' },
+  screenDesc: { en: 'A look inside the platform.', zh: '产品界面一览。' },
+  techTitle: { en: 'Tech Stack', zh: '技术栈' },
+  ctaTitle: { en: 'Start managing your Agent team today.', zh: '开始构建你的 Agent 运营体系。' },
+  ctaDesc: { en: 'Open source, self-hosted, production ready.', zh: '开源免费，本地部署，生产就绪。' },
+};
+
+function toggleLang() {
+  lang = lang === 'en' ? 'zh' : 'en';
+  document.getElementById('langBtn').textContent = lang === 'en' ? '中文' : 'EN';
+  for (const [id, texts] of Object.entries(i18n)) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = texts[lang];
+  }
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('themeBtn').innerHTML = dark ? '&#127769;' : '&#9728;';
+}
+</script>
+</body>
+</html>

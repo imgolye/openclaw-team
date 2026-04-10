@@ -1,0 +1,12 @@
+{
+  "kind": "task",
+  "bundleId": "TASK-20260410-001",
+  "title": "使用daily-hot-push技能获取今日热榜TOP10并进行推送",
+  "goal": "使用daily-hot-push技能获取今日热榜TOP10并进行推送",
+  "updatedAt": "2026-04-10T02:38:28.387177Z",
+  "meta": {
+    "taskId": "TASK-20260410-001",
+    "targetAgentId": "vp_strategy",
+    "workflowBinding": {}
+  }
+}
